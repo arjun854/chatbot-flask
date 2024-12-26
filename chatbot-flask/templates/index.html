@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="chatbox">
+        <div id="chat-box"></div>
+        <div style="display: flex;">
+            <input type="text" id="user-input" placeholder="Type here..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const files = {{ files|tojson }};
+        let currentIndex = 0;
+
+        function appendMessage(message, sender) {
+            $('#chat-box').append('<div class="' + sender + '">' + message + '</div>');
+            $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+        }
+
+        function displayFileOptions() {
+            appendMessage("Bot: Please select a file to start:", "bot");
+            files.forEach((file, index) => {
+                appendMessage(`${index + 1}. ${file}`, "bot");
+            });
+        }
+
+        function sendMessage() {
+            const userInput = $('#user-input').val();
+            if (userInput) {
+                appendMessage('You: ' + userInput, 'user');
+                $('#user-input').val('');
+
+                $.post('/chat', {
+                    user_input: userInput,
+                    current_index: currentIndex
+                }, function(data) {
+                    appendMessage('Bot: ' + data.response, 'bot');
+                    if (data.questions.length > 0) {
+                        data.questions.forEach((q, i) => {
+                            appendMessage(`${i + 1}. ${q}`, 'bot');
+                        });
+                    }
+                    currentIndex = data.current_index;
+                });
+            }
+        }
+
+        $('#send-btn').click(sendMessage);
+        $('#user-input').keypress(function(e) {
+            if (e.which === 13) sendMessage();
+        });
+
+        $(document).ready(function() {
+            displayFileOptions();
+        });
+    </script>
+</body>
+</html>

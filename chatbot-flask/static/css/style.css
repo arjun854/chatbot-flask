@@ -1,0 +1,107 @@
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Chatbox container */
+.chatbox {
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 500px;
+}
+
+/* Chat history container */
+#chat-box {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 100%;
+    max-height: 350px;
+}
+
+/* Style the bot and user messages */
+.bot, .user {
+    margin-bottom: 10px;
+    max-width: 70%;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.bot {
+    background-color: #e1f5fe;
+    align-self: flex-start;
+}
+
+.user {
+    background-color: #c8e6c9;
+    align-self: flex-end;
+}
+
+/* Styling for input and button */
+#user-input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(100% - 80px);
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#send-btn {
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#send-btn:hover {
+    background-color: #45a049;
+}
+
+/* Additional message options styling */
+.question-option {
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.question-option:hover {
+    background-color: #ddd;
+}
+
+#chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="chatbox">
+        <div id="chat-box">
+            <!-- Chat history will appear here -->
+        </div>
+        <input type="text" id="user-input" placeholder="Ask a question..." />
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let currentIndex = 0;
+
+        // Append initial questions when the page loads
+        const initialQuestions = {{ questions|tojson }};
+        function appendMessage(message, sender) {
+            $('#chat-box').append('<div class="' + sender + '">' + message + '</div>');
+        }
+
+        function displayInitialQuestions() {
+            appendMessage('Bot: Here are some questions you may be asking:', 'bot');
+            initialQuestions.forEach((question, i) => {
+                appendMessage(`${i + 1}. ${question}`, 'bot');
+            });
+        }
+
+        function sendMessage() {
+            const userInput = $('#user-input').val();
+            if (userInput) {
+                appendMessage('You: ' + userInput, 'user');
+                $('#user-input').val('');
+
+                $.post('/chat', {
+                    user_input: userInput,
+                    current_index: currentIndex
+                }, function(data) {
+                    appendMessage('Bot: ' + data.response, 'bot');
+
+                    if (data.questions.length > 0) {
+                        let options = '';
+                        data.questions.forEach((q, i) => {
+                            options += `<div class="question-option">${i + 1}. ${q}</div>`;
+                        });
+                        appendMessage(options, 'bot');
+                    }
+                    currentIndex = data.current_index;
+                });
+            }
+        }
+
+        $('#send-btn').click(sendMessage);
+        $('#user-input').keypress(function(e) {
+            if (e.which === 13) {
+                sendMessage();
+            }
+        });
+
+        // Display the initial set of questions when the page loads
+        $(document).ready(function() {
+            displayInitialQuestions();
+        });
+    </script>
+</body>
+</html>
